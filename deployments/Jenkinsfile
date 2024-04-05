@@ -25,7 +25,7 @@ pipeline {
         _GIT_CREDENTIALS_ID     = "a6d86234-1d62-4bc8-9142-d6dd1dbbb867"
         _REPORT_RESULT_PATH     = "build/results.xml"
         _ALLURE_REPORT_PATH     = "/allure-results"
-        _JOB_CONFIG             = "deployment/job_configurations.json"
+        _JOB_CONFIG             = "deployments/job_configurations.json"
         _VENV_CMD_CREATE_VENV   = "python3 -m venv /tmp/venv"
         _VENV_CMD_ACTIVE        = ". /tmp/venv/bin/activate"
         _VENV_CMD_UPGRADE_PIP   = "/tmp/venv/bin/pip install --upgrade pip"
