@@ -1,4 +1,4 @@
-# automation_api_test_pystest
+# Testing Restful API with Python Pytest
 
 ## Purpose
 - For testing, which using 
@@ -45,7 +45,7 @@ git ls-tree -r --name-only HEAD | tree --fromfile
 ```
 
 ## Step-by-step
-### Option 1: Buid up a simple Docker
+### Option 1: Build up a simple Docker
 Input the command
 ```
 docker build -t pytest_learn_image -f ./deployments/Dockerfile .
