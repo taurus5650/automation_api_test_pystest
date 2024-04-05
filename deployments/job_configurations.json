@@ -1,4 +1,4 @@
 {
-  "auto-api-users": "/test_suites/test_users",
-  "auto-api-books": "/test_suites/test_books"
+  "auto-api-users": "./test_suites/test_books",
+  "auto-api-books": "./test_suites/test_books"
 }
