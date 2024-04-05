@@ -21,7 +21,7 @@ pipeline {
     }
 
     environment {
-        _GIT_REPO               = "https://github.com/taurus5650/automation_api_pytest.git"
+        _GIT_REPO               = "git@github.com:taurus5650/automation_api_test_pytest.git"
         _GIT_CREDENTIALS_ID     = "a6d86234-1d62-4bc8-9142-d6dd1dbbb867"
         _REPORT_RESULT_PATH     = "build/results.xml"
         _ALLURE_REPORT_PATH     = "/allure-results"
