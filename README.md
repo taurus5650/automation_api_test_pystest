@@ -100,7 +100,7 @@ Before create the Jenkins pipeline, we need to add job in `job_configuration.jso
         ├── test_get_users.py
         └── test_post_users.py
 ```
-![Jenkinsfile_config.png](readme%2FJenkinsfile_config.png)
+![job_config_json.png](readme%2Fjob_config_json.png)
 
 6. Build Jenkins pipeline, select [new items] build a new job.
 ![jenkins_new_item.png](readme%2Fjenkins_new_item.png)
