@@ -102,7 +102,7 @@ Before create the Jenkins pipeline, we need to add job in `job_configuration.jso
 ```
 ![Jenkinsfile_config.png](readme%2FJenkinsfile_config.png)
 
-5. Build Jenkins pipeline, select [new items] build a new job.
+6. Build Jenkins pipeline, select [new items] build a new job.
 ![jenkins_new_item.png](readme%2Fjenkins_new_item.png)
 
 7. Give a job naming and select pipeline
@@ -126,17 +126,3 @@ Before create the Jenkins pipeline, we need to add job in `job_configuration.jso
 
 12. May way to allure report to check the result :)
 ![allure_report.png](readme%2Fallure_report.png)
-
-
-
-
-
-
-
-
-
-
-
-```
-
-```

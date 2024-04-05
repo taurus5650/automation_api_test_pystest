@@ -1,6 +1,7 @@
 import json
 import textwrap
 
+import allure
 import requests
 
 from logger import Logger
