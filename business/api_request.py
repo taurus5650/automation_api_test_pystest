@@ -14,6 +14,7 @@ class APIRequest:
         self.waiting_time = waiting_time
         self.global_debug = global_debug
 
+    @allure.step("[{method}] {url}")
     def _send_request(self, method: str, url: str, debug=None, **kwargs):
 
         acceptable_waiting_time = kwargs.pop(
