@@ -1,0 +1,4 @@
+{
+  "auto-api-users": "api_testing/test_suites/users",
+  "auto-api-books": "api_testing/test_suites/books"
+}
