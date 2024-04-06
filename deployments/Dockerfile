@@ -15,7 +15,7 @@ COPY . .
 # Set an environment variable to indicate that we are running inside Docker
 ENV RUNNING_IN_DOCKER=true
 
-# Run the tests and generate Allure report
+# Run the tests
 RUN python -m pytest -v -s
 
 CMD tail -f /dev/null

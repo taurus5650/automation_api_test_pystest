@@ -1,5 +1,7 @@
 import logging.handlers
 import sys
+import uuid
+
 
 class Logger:
     @staticmethod
@@ -9,9 +11,10 @@ class Logger:
         logger.setLevel(logging.DEBUG)
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(logging.DEBUG)
+        request_id = str(uuid.uuid4())
 
         formatter = logging.Formatter(
-            "%(asctime)s | %(name)s | %(levelname)s |\n%(message)s | %(threadName)s"
+            f"%(asctime)s | %(name)s | %(levelname)s | {request_id} |\n%(message)s"
         )
         console_handler.setFormatter(formatter)
 
