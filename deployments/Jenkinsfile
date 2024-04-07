@@ -84,7 +84,186 @@ pipeline {
             steps {
                   tools {
                     dockerTool 'Docker'
+                import groovy.json.JsonSlurper
+
+// Function to read job configurations from a JSON file
+def readJobConfigurationsFromFile(filePath) {
+    def jobConfigurations = [:]
+    try {
+        def fileContents = readFile(file: filePath)
+        jobConfigurations = readJSON(text: fileContents)
+    } catch (Exception e) {
+        error("Failed to read job configurations from the file: ${filePath}\nError: ${e.message}")
+    }
+    return jobConfigurations
+}
+
+pipeline {
+    agent any
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timestamps()
+    }
+
+    environment {
+        _GIT_REPO               = "https://github.com/taurus5650/automation_api_test_pytest.git"
+        _GIT_CREDENTIALS_ID     = "a6d86234-1d62-4bc8-9142-d6dd1dbbb867"
+        _REPORT_RESULT_PATH     = "build/results.xml"
+        _ALLURE_REPORT_PATH     = "/allure-results"
+        _JOB_CONFIG             = "deployments/job_configurations.json"
+        _DOCKER_FILE_CMD        = "docker build --platform linux/amd64 --no-cache -t pytest_api  -f ./deployments/Dockerfile ."
+        _VENV_CMD_CREATE_VENV   = "python3 -m venv /tmp/venv"
+        _VENV_CMD_ACTIVE        = ". /tmp/venv/bin/activate"
+        _VENV_CMD_UPGRADE_PIP   = "/tmp/venv/bin/pip install --upgrade pip"
+        _VENV_CMD_INSTALL_LIB   = "/tmp/venv/bin/pip install -r ./requirements.txt"
+        _VENV_CMD_REMOVED       = "rm -rf /tmp/venv"
+        _AT_COMMAND             = "/tmp/venv/bin/python -m pytest --alluredir ${WORKSPACE}/allure-results --junitxml=build/results.xml"
+    }
+
+    parameters {
+        string(
+            name: "BRANCH_NAME",
+            defaultValue: "master",
+            description: ''
+        )
+        string(
+            name: "TEST_CASES",
+            defaultValue: "",
+            description: "All cases : empty | Specific api cases : test_get_users"
+        )
+    }
+
+    stages {
+        stage('Cleanup') {
+            steps {
+                cleanWs()
+            }
+        }
+
+        stage('Clone repository') {
+            steps {
+                script {
+                     withCredentials([
+                        usernamePassword(
+                        credentialsId: "${_GIT_CREDENTIALS_ID}",
+                        usernameVariable: "GIT_USERNAME",
+                        passwordVariable: "GIT_PASSWORD"
+                        )
+                     ]) {
+                        def gitBranch = params.BRANCH_NAME
+                        echo "Checking out branch: $gitBranch"
+                        checkout([
+                            $class: "GitSCM",
+                            branches: [[name: gitBranch]],
+                            userRemoteConfigs: [[
+                            url: "${_GIT_REPO}",
+                            credentialsId: "${_GIT_CREDENTIALS_ID}"
+                            ]]
+                        ])
+                       }
                 }
+            }
+        }
+
+        stage('Docker Tools') {
+            steps {
+                script {
+                    tools {
+                        dockerTool 'Docker'
+                    }
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build Image
+                    sh "${_DOCKER_FILE_CMD}"
+                }
+            }
+        }
+
+        //stage('Setup Virtual Environment') {
+            //steps {
+                //script {
+                    // Create and activate virtual environment
+                    //sh "${_VENV_CMD_CREATE_VENV}"
+                    //sh "${_VENV_CMD_ACTIVE}"
+                    //sh "${_VENV_CMD_UPGRADE_PIP}"
+                    //sh "${_VENV_CMD_INSTALL_LIB}"
+                //}
+            //}
+        //}
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    def jobName = env.JOB_NAME
+                    if (!jobName) {
+                        error("JOB_NAME environment variable not set.")
+                    }
+
+                    def jobConfigurations = readJobConfigurationsFromFile("${_JOB_CONFIG}")
+
+                    // If the TEST_SUITE parameter is not provided, use the default value from the job configurations
+                    def selectedTestSuite = params.TEST_SUITE ?: jobConfigurations[jobName]
+                    if (!selectedTestSuite) {
+                        error("Unsupported job name or no default test suite provided: ${jobName}")
+                    }
+
+                    // Split the selected test suite and test case input if provided
+                    def testSuiteAndTestCase = selectedTestSuite.split("::")
+                    def testSuite = testSuiteAndTestCase[0]
+                    def testCase = testSuiteAndTestCase.size() > 1 ? testSuiteAndTestCase[1] : null
+
+                    // Check if TEST_CASES parameter is provided
+                    if (params.TEST_CASES) {
+                        // Run specific test case
+                        def testCommand = "${_AT_COMMAND} -k ${params.TEST_CASES}"
+                        def testResult = sh script: testCommand, returnStatus: true
+                    } else {
+                        // Run entire test suite
+                        def testCommand = "${_AT_COMMAND} ${testSuite}"
+                        def testResult = sh script: testCommand, returnStatus: true
+                    }
+                    // Archive test results
+                    archiveArtifacts artifacts: "${_REPORT_RESULT_PATH}", allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Allure Reports') {
+            steps {
+                script {
+                    allure([
+                        includeProperties: false,
+                        jdk: "",
+                        reportBuildPolicy: "ALWAYS",
+                        results: [[path: "${_ALLURE_REPORT_PATH}"]]
+                    ])
+                }
+           }
+        }
+
+        stage('Teardown Virtual Environment') {
+            steps {
+                script {
+                    sh "${_VENV_CMD_REMOVED}"
+                }
+            }
+        }
+
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+    }
+
+}}
             }
         }
 
