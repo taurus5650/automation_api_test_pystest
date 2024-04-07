@@ -26,6 +26,7 @@ pipeline {
         _REPORT_RESULT_PATH     = "build/results.xml"
         _ALLURE_REPORT_PATH     = "/allure-results"
         _JOB_CONFIG             = "deployments/job_configurations.json"
+        _DOCKER_FILE_CMD        = "docker build --platform linux/amd64 --no-cache -t pytest_api  -f ./deployments/Dockerfile ."
         _VENV_CMD_CREATE_VENV   = "python3 -m venv /tmp/venv"
         _VENV_CMD_ACTIVE        = ". /tmp/venv/bin/activate"
         _VENV_CMD_UPGRADE_PIP   = "/tmp/venv/bin/pip install --upgrade pip"
@@ -79,17 +80,26 @@ pipeline {
             }
         }
 
-        stage('Setup Virtual Environment') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // Create and activate virtual environment
-                    sh "${_VENV_CMD_CREATE_VENV}"
-                    sh "${_VENV_CMD_ACTIVE}"
-                    sh "${_VENV_CMD_UPGRADE_PIP}"
-                    sh "${_VENV_CMD_INSTALL_LIB}"
+                    // Build Image
+                    sh "${_DOCKER_FILE_CMD}"
                 }
             }
         }
+
+        //stage('Setup Virtual Environment') {
+            //steps {
+                //script {
+                    // Create and activate virtual environment
+                    //sh "${_VENV_CMD_CREATE_VENV}"
+                    //sh "${_VENV_CMD_ACTIVE}"
+                    //sh "${_VENV_CMD_UPGRADE_PIP}"
+                    //sh "${_VENV_CMD_INSTALL_LIB}"
+                //}
+            //}
+        //}
 
         stage('Run Tests') {
             steps {
