@@ -1,6 +1,8 @@
 # Use the official Python image as the base image
 FROM python:3.11-slim
 
+LABEL maintainer="taurus_5650@hotmail.com"
+
 # Set the working directory in the container
 WORKDIR /app
 
