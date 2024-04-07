@@ -80,6 +80,11 @@ pipeline {
             }
         }
 
+         tools {
+
+            dockerTool 'Docker'
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
