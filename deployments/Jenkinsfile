@@ -14,7 +14,6 @@ def readJobConfigurationsFromFile(filePath) {
 
 pipeline {
     agent any
-    def app
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -80,6 +79,8 @@ pipeline {
                 }
             }
         }
+
+        def app
 
         stage('Build image') {
             /* This builds the actual image; synonymous to
