@@ -80,9 +80,12 @@ pipeline {
             }
         }
 
-         tools {
-
-            dockerTool 'Docker'
+        stage('Dcoker Tools') {
+            steps {
+                  tools {
+                    dockerTool 'Docker'
+                }
+            }
         }
 
         stage('Build Docker Image') {
