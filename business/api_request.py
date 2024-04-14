@@ -8,7 +8,7 @@ from logger import Logger
 
 
 class APIRequest:
-    logger = Logger.setup_logger()
+    logger = Logger.setup_logger(__name__)
 
     def __init__(self, waiting_time = None, global_debug=True):
         self._session = requests.Session()

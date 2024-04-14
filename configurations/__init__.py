@@ -1,6 +1,6 @@
 from logger import Logger
 
-logger = Logger.setup_logger()
+logger = Logger.setup_logger(__name__)
 
 try:
     from .api_domain import Covid19StatisticsConfig

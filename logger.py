@@ -5,9 +5,9 @@ import uuid
 
 class Logger:
     @staticmethod
-    def setup_logger():
+    def setup_logger(name):
 
-        logger = logging.getLogger(__name__)
+        logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
         console_handler = logging.StreamHandler(sys.stdout)
         console_handler.setLevel(logging.DEBUG)

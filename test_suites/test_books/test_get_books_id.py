@@ -7,7 +7,7 @@ from logger import Logger
 
 
 class TestCase:
-    logger = Logger.setup_logger()
+    logger = Logger.setup_logger(__name__)
     booksAPI = BooksAPI()
 
 

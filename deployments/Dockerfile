@@ -4,13 +4,9 @@ FROM python:3.11-slim
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-
 # Copy the rest of the application code into the container
 COPY . .
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Set an environment variable to indicate that we are running inside Docker
 ENV RUNNING_IN_DOCKER=true
