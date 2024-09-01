@@ -7,7 +7,7 @@
   - Allure report 
   - Docker 
 - Support testing 
-  - Restful api testing (Testing resouce : https://fakerestapi.azurewebsites.net)
+  - Restful api testing (Testing resouces : https://fakerestapi.azurewebsites.net)
 
 ## Directory Structure
 ```
